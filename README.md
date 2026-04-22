@@ -90,7 +90,6 @@ python api/app.py
 
 Then open **http://localhost:8080** in your browser.
 
-> The scraper runs automatically on startup and every 6 hours after that. You can also click **"↻ Refresh Now"** in the dashboard.
 
 ---
 
@@ -153,15 +152,13 @@ Cleaned data is stored in SQLite (`data/jobs.db`).
 4. Render auto-detects `render.yaml` — just click **Deploy**
 5. Your live URL will appear in the Render dashboard
 
-> **Note:** Render's free tier spins down after inactivity. On the first visit it may take ~30 seconds to wake up.
+
 
 ---
 
 ## Environment Variables
 
 No environment variables are required to run this project. The app works out of the box.
-
-> If you later want to use a PostgreSQL database instead of SQLite (recommended for production), add a `DATABASE_URL` environment variable and update `cleaner.py` accordingly.
 
 ---
 

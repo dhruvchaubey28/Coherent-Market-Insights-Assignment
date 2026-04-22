@@ -1,1 +1,0 @@
-# Coherent-Market-Insights-Assignment

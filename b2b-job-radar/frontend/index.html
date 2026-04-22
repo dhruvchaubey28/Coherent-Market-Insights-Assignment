@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B2B Job Radar — Hiring Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent: #5cefb0;
+    --accent2: #f7b731;
+    --muted: #555580;
+    --text: #e8e8f0;
+    --text-dim: #8888aa;
+    --radius: 10px;
+    --font: 'Syne', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(12px);
+  }
+  .logo {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--accent); }
+  .pill {
+    background: var(--accent);
+    color: #0a0a0f;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  #lastUpdated {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  #refreshBtn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-family: var(--font);
+    font-size: 0.78rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  #refreshBtn:hover { background: var(--accent); color: #0a0a0f; border-color: var(--accent); }
+
+  /* ── Layout ── */
+  .page { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
+
+  /* ── Stats bar ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .stat-card .label { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-card .value { font-size: 1.9rem; font-weight: 800; color: var(--accent); }
+
+  /* ── Top section ── */
+  .top-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 720px) { .top-section { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .card-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .bar-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bar-label { font-size: 0.82rem; min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track { flex: 1; background: var(--bg); border-radius: 4px; height: 6px; }
+  .bar-fill { height: 100%; border-radius: 4px; background: var(--accent); transition: width 0.6s ease; }
+  .bar-count { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); min-width: 28px; text-align: right; }
+
+  /* tag bars accent2 */
+  .tag-fill { background: var(--accent2); }
+
+  /* ── Search ── */
+  .search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .search-row input, .search-row select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.84rem;
+    padding: 9px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-row input { flex: 1; min-width: 180px; }
+  .search-row input::placeholder { color: var(--muted); }
+  .search-row input:focus, .search-row select:focus { border-color: var(--accent); }
+  .search-row select option { background: var(--surface); }
+
+  /* ── Jobs table ── */
+  .jobs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .jobs-header h2 { font-size: 1rem; font-weight: 700; }
+  #totalLabel { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 0 12px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: rgba(92,239,176,0.04); }
+  tbody td { padding: 13px 12px; font-size: 0.86rem; vertical-align: top; }
+  td.title-col { font-weight: 700; max-width: 200px; }
+  td.company-col { color: var(--accent); font-family: var(--mono); font-size: 0.8rem; }
+  td.loc-col { color: var(--text-dim); font-size: 0.8rem; }
+  td.salary-col { font-family: var(--mono); font-size: 0.78rem; color: var(--accent2); white-space: nowrap; }
+  td.date-col { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); white-space: nowrap; }
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; max-width: 220px; }
+  .tag-chip {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    background: rgba(247,183,49,0.1);
+    border: 1px solid rgba(247,183,49,0.2);
+    color: var(--accent2);
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .apply-btn {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 5px 12px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.15s;
+    white-space: nowrap;
+    font-family: var(--mono);
+  }
+  .apply-btn:hover { background: var(--accent); color: #0a0a0f; }
+
+  /* ── Pagination ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .pagination button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .pagination button.active { border-color: var(--accent); color: var(--accent); }
+  .pagination button:hover:not(:disabled) { border-color: var(--accent); }
+  .pagination button:disabled { opacity: 0.3; cursor: default; }
+
+  /* ── Loading / empty ── */
+  .loading { text-align: center; padding: 48px; color: var(--muted); font-family: var(--mono); font-size: 0.9rem; }
+  .dot { animation: blink 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100%{opacity:0} 40%{opacity:1} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">B2B Job <span>Radar</span> <span class="pill">LIVE</span></div>
+  <div class="header-right">
+    <span id="lastUpdated">–</span>
+    <button id="refreshBtn" onclick="manualRefresh()">↻ Refresh Now</button>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- Stats -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="label">Total Jobs</div><div class="value" id="statTotal">–</div></div>
+    <div class="stat-card"><div class="label">Companies</div><div class="value" id="statCompanies">–</div></div>
+    <div class="stat-card"><div class="label">Top Tag</div><div class="value" style="font-size:1.1rem;padding-top:4px" id="statTopTag">–</div></div>
+  </div>
+
+  <!-- Charts -->
+  <div class="top-section">
+    <div class="card">
+      <div class="card-title">Top Hiring Companies</div>
+      <div id="companiesChart"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Trending Tech Tags</div>
+      <div id="tagsChart"></div>
+    </div>
+  </div>
+
+  <!-- Jobs list -->
+  <div class="card">
+    <div class="jobs-header">
+      <h2>Job Listings</h2>
+      <span id="totalLabel">–</span>
+    </div>
+
+    <div class="search-row">
+      <input id="searchInput" type="text" placeholder="Search title, company, skill…" oninput="debounceSearch()" />
+      <select id="tagFilter" onchange="loadJobs(1)">
+        <option value="">All Tags</option>
+      </select>
+    </div>
+
+    <div id="tableWrap">
+      <div class="loading">Fetching data<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+</div>
+
+<script>
+  let currentPage = 1;
+  let searchTimer;
+
+  // ── Fetch helpers ────────────────────────────────────────────────────────
+
+  async function fetchJSON(url) {
+    const r = await fetch(url);
+    return r.json();
+  }
+
+  // ── Stats + charts ───────────────────────────────────────────────────────
+
+  async function loadStats() {
+    const s = await fetchJSON("/api/stats");
+    document.getElementById("statTotal").textContent = s.total_jobs.toLocaleString();
+    document.getElementById("statCompanies").textContent = s.top_companies.length + "+";
+    document.getElementById("statTopTag").textContent = s.top_tags[0]?.tag || "–";
+
+    const maxCo = s.top_companies[0]?.count || 1;
+    document.getElementById("companiesChart").innerHTML = s.top_companies.slice(0, 8).map(c => `
+      <div class="bar-item">
+        <span class="bar-label" title="${c.company}">${c.company}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c.count/maxCo*100)}%"></div></div>
+        <span class="bar-count">${c.count}</span>
+      </div>`).join("");
+
+    const maxTag = s.top_tags[0]?.count || 1;
+    document.getElementById("tagsChart").innerHTML = s.top_tags.slice(0, 8).map(t => `
+      <div class="bar-item">
+        <span class="bar-label" title="${t.tag}">${t.tag}</span>
+        <div class="bar-track"><div class="bar-fill tag-fill" style="width:${Math.round(t.count/maxTag*100)}%"></div></div>
+        <span class="bar-count">${t.count}</span>
+      </div>`).join("");
+  }
+
+  async function loadTags() {
+    const tags = await fetchJSON("/api/tags");
+    const sel = document.getElementById("tagFilter");
+    tags.slice(0, 40).forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t; opt.textContent = t;
+      sel.appendChild(opt);
+    });
+  }
+
+  // ── Jobs table ───────────────────────────────────────────────────────────
+
+  async function loadJobs(page = 1) {
+    currentPage = page;
+    const search  = document.getElementById("searchInput").value.trim();
+    const tag     = document.getElementById("tagFilter").value;
+
+    let url = `/api/jobs?page=${page}&per_page=20`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (tag)    url += `&tag=${encodeURIComponent(tag)}`;
+
+    document.getElementById("tableWrap").innerHTML =
+      `<div class="loading">Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>`;
+
+    const data = await fetchJSON(url);
+
+    document.getElementById("totalLabel").textContent = `${data.total.toLocaleString()} results`;
+    document.getElementById("lastUpdated").textContent = "Updated: " + new Date().toLocaleTimeString();
+
+    if (!data.jobs.length) {
+      document.getElementById("tableWrap").innerHTML = `<div class="loading">No jobs found.</div>`;
+      document.getElementById("pagination").innerHTML = "";
+      return;
+    }
+
+    const rows = data.jobs.map(j => {
+      const chips = (j.tags || "").split(",").filter(Boolean).slice(0, 4)
+        .map(t => `<span class="tag-chip">${t.trim()}</span>`).join("");
+      return `<tr>
+        <td class="title-col">${esc(j.title)}</td>
+        <td class="company-col">${esc(j.company)}</td>
+        <td class="loc-col">${esc(j.location)}</td>
+        <td><div class="tags-wrap">${chips}</div></td>
+        <td class="salary-col">${esc(j.salary)}</td>
+        <td class="date-col">${j.posted_date || "–"}</td>
+        <td>${j.apply_url ? `<a class="apply-btn" href="${j.apply_url}" target="_blank">Apply →</a>` : "–"}</td>
+      </tr>`;
+    }).join("");
+
+    document.getElementById("tableWrap").innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Title</th><th>Company</th><th>Location</th><th>Tags</th>
+          <th>Salary</th><th>Posted</th><th></th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+
+    renderPagination(data.page, data.pages);
+  }
+
+  function renderPagination(current, total) {
+    if (total <= 1) { document.getElementById("pagination").innerHTML = ""; return; }
+    let html = `<button ${current===1?"disabled":""} onclick="loadJobs(${current-1})">← Prev</button>`;
+    const start = Math.max(1, current - 2);
+    const end   = Math.min(total, current + 2);
+    for (let i = start; i <= end; i++) {
+      html += `<button class="${i===current?"active":""}" onclick="loadJobs(${i})">${i}</button>`;
+    }
+    html += `<button ${current===total?"disabled":""} onclick="loadJobs(${current+1})">Next →</button>`;
+    document.getElementById("pagination").innerHTML = html;
+  }
+
+  function esc(s) {
+    return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  function debounceSearch() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => loadJobs(1), 400);
+  }
+
+  async function manualRefresh() {
+    const btn = document.getElementById("refreshBtn");
+    btn.textContent = "Refreshing…";
+    btn.disabled = true;
+    try {
+      await fetch("/api/refresh", { method: "POST" });
+      await loadStats();
+      await loadJobs(1);
+    } finally {
+      btn.textContent = "↻ Refresh Now";
+      btn.disabled = false;
+    }
+  }
+
+  // ── Boot ─────────────────────────────────────────────────────────────────
+  loadStats();
+  loadTags();
+  loadJobs(1);
+</script>
+</body>
+</html>

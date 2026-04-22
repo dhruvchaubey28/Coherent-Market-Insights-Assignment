@@ -2,7 +2,7 @@
 
 > A live B2B hiring intelligence pipeline — scrapes, cleans, stores, and visualises remote job postings to help businesses track competitor hiring, trending tech stacks, and market signals.
 
-**Live Demo:** _[Add your Render/Railway URL here after deploying]_
+**Live Demo:** _https://coherent-market-insights-assignment.onrender.com/_
 
 ---
 

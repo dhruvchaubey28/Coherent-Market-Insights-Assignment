@@ -74,6 +74,7 @@ b2b-job-radar/
 ```bash
 # 1. Clone the repo
 git clone https://github.com/dhruvchaubey28/Coherent-Market-Insights-Assignment.git
+cd Coherent-Market-Insights-Assignment
 cd b2b-job-radar
 
 # 2. Create and activate a virtual environment
@@ -87,7 +88,7 @@ pip install -r requirements.txt
 python api/app.py
 ```
 
-Then open **http://localhost:5000** in your browser.
+Then open **http://localhost:8080** in your browser.
 
 > The scraper runs automatically on startup and every 6 hours after that. You can also click **"↻ Refresh Now"** in the dashboard.
 

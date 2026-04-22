@@ -8,13 +8,13 @@
 
 ## The Problem Being Solved
 
-Businesses struggle to keep up with the job market — who is hiring, what roles, and with what technology. This is valuable B2B intelligence:
+Businesses struggle to keep up with the job market who is hiring, what roles, and with what technology. This is valuable B2B intelligence.
 
 - A **SaaS vendor** wants to know which companies are scaling engineering teams (potential buyers).
 - A **recruiter** wants to track which tech stacks are surging in demand.
 - A **market analyst** wants to see hiring velocity across sectors.
 
-**B2B Job Radar** solves this by automatically scraping, cleaning, and surfacing remote job data from [RemoteOK](https://remoteok.com) — a well-known remote jobs board — and presenting it in a searchable, filterable dashboard with aggregate insights.
+**B2B Job Radar** solves this by automatically scraping, cleaning, and surfacing remote job data from [RemoteOK](https://remoteok.com) a well-known remote jobs board and presenting it in a searchable, filterable dashboard with aggregate insights.
 
 ---
 
@@ -37,7 +37,7 @@ RemoteOK Public API
                                          └──────────────┘
 ```
 
-The pipeline runs **automatically every 6 hours** via APScheduler — no manual intervention needed.
+The pipeline runs automatically every 6 hours via APScheduler, no manual intervention needed.
 
 ---
 
@@ -73,7 +73,7 @@ b2b-job-radar/
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/b2b-job-radar.git
+git clone https://github.com/dhruvchaubey28/Coherent-Market-Insights-Assignment.git
 cd b2b-job-radar
 
 # 2. Create and activate a virtual environment
